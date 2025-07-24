@@ -4,7 +4,7 @@ const verifyToken = require("../middleware/verifyToken");
 const postController = require("../controllers/post-controller");
 const authController = require("../controllers/auth-controller");
 const { uploadImage } = require('../controllers/upload-controller')
-const { sendOtp, verifyOtpAndRegister, getProfile, getUserByUsername, followUser, unfollowUser, reportUser,getFollowersWithMutuals,getFollowingWithMutuals,getFollowersList, getFollowingList,getSuggestedUsers } = require("../controllers/auth-controller");
+const { sendOtp, verifyOtpAndRegister, getProfile, getUserByUsername, followUser, unfollowUser, reportUser,getFollowersWithMutuals,getFollowingWithMutuals,getFollowersList, getFollowingList,getSuggestedUsers,ResolveUsername } = require("../controllers/auth-controller");
 const {getNotifications,markAllAsRead} =  require('../controllers/notification-controller')
 
 
@@ -30,6 +30,7 @@ router.post("/post", postController.createPost);
 router.post("/post", verifyToken, postController.createPost);
 router.get("/profile", verifyToken, getProfile);
 router.post("/update-profile", verifyToken, authController.updateProfile);
+router.get("/resolve/:username", verifyToken,ResolveUsername);
 
 router.post("/send-otp", sendOtp);
 router.post("/verify-otp", verifyOtpAndRegister);

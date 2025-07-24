@@ -706,7 +706,7 @@ const getSuggestedUsers = async (req, res) => {
       username: user.username,
       name: user.name,
       profileImageURL: user.profileImageURL || "",
-      isVerified:user.isVerified
+      isVerified: user.isVerified
     }));
 
     return res.status(200).json(result);
@@ -743,6 +743,19 @@ const submitComplaint = async (req, res) => {
   }
 };
 
+const ResolveUsername = async (req, res) => {
+  const username = req.params.username;
+  try {
+    const user = await require("../models/User").findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({ _id: user._id });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+}
+
 
 
 
@@ -771,5 +784,6 @@ module.exports = {
   updateProfile,
   getSuggestedUsers,
   submitComplaint,
+  ResolveUsername,
 };
 
