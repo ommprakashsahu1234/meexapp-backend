@@ -33,7 +33,10 @@ router.post("/update-profile", verifyToken, authController.updateProfile);
 
 router.post("/send-otp", sendOtp);
 router.post("/verify-otp", verifyOtpAndRegister);
-router.get("/username/:username", verifyToken, authController.getUserByUsername);
+router.get("/username/:username", authController.getUserByUsername);
+router.get("/resolve/:username", getUserByUsername);
+
+// router.get("/username/:username", verifyToken, authController.getUserByUsername);
 router.get("/:username/followers", verifyToken, getFollowersList);
 router.get("/:username/following", verifyToken, getFollowingList);
 router.get("/:id/followers", verifyToken, getFollowersWithMutuals);
