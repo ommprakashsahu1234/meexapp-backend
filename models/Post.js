@@ -10,7 +10,7 @@ const post = new mongoose.Schema({
         enum: ["image", "video"]
       },
       url: { type: String },
-      fileId: { type: String } 
+      fileId: { type: String }
     }
   ],
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
@@ -18,7 +18,8 @@ const post = new mongoose.Schema({
   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   visibility: { type: String, enum: ["public", "private", "followers"], default: "public" },
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
+  suspended: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model("post", post);

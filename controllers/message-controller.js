@@ -165,7 +165,7 @@ const searchUsernames = async (req, res) => {
 
     const users = await User.find({
       username: { $regex: `^${query}`, $options: "i" }
-    }).limit(10).select("_id username");
+    }).limit(10).select("_id username profileImageURL");
 
     res.status(200).json(users);
   } catch (err) {

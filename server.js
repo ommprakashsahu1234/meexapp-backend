@@ -18,12 +18,12 @@ const UserRoute = require('./router/user-router');
 const PostRoute = require('./router/post-router');
 const MessageRoute = require('./router/message-router');
 const ActivityRoute = require('./router/activity-router')
-// const AdminRoute = require('./router/admin-router');
+const AdminRoute = require('./router/admin-router')
 
 app.use('/api/user', UserRoute);
 app.use("/api/post", PostRoute);
-// app.use('/api/admin', AdminRoute);
 app.use("/api/messages", MessageRoute);
+app.use("/api/admin", AdminRoute);
 app.use("/api/", ActivityRoute);
 
 

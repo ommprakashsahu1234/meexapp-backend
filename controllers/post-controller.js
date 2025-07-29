@@ -27,6 +27,7 @@ const createPost = async (req, res) => {
         url: mediaURL,
         fileId
       }],
+      suspended: false,
       tags: JSON.parse(tags),
     });
 
@@ -46,12 +47,19 @@ const createPost = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
+    const posts = await Post.find({
+      $or: [
+        { suspended: { $exists: false } },
+        { suspended: false }
+      ]
+    }).sort({ createdAt: -1 });
+
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching posts', error: error.message });
   }
 };
+
 const getPostById = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id)
@@ -73,8 +81,15 @@ const searchUsernames = async (req, res) => {
     if (!query) return res.status(200).json([]);
 
     const users = await User.find({
-      username: { $regex: `^${query}`, $options: "i" }
-    }).limit(10).select("_id username");
+      username: { $regex: `^${query}`, $options: "i" },
+      $or: [
+        { "isbanned.banned": { $exists: false } },
+        { "isbanned.banned": false }
+      ]
+    })
+      .limit(10)
+      .select("_id username");
+
 
     res.status(200).json(users);
   } catch (err) {
@@ -102,7 +117,13 @@ const getPostsByUser = async (req, res) => {
     const isFollowing = profileUser.followers.some(f => f.toString() === viewerId.toString());
 
 
-    const posts = await Post.find({ authorId: profileUserId })
+    const posts = await Post.find({
+      authorId: profileUserId,
+      $or: [
+        { suspended: { $exists: false } },
+        { suspended: false }
+      ]
+    })
       .populate('authorId', 'username profileImageURL')
       .populate('tags', 'username profileImageURL')
       .sort({ createdAt: -1 });
@@ -113,6 +134,7 @@ const getPostsByUser = async (req, res) => {
       if (post.visibility === "private" && isSelf) return true;
       return false;
     });
+
 
     res.status(200).json({
       posts: filtered,
@@ -144,10 +166,12 @@ const getOwnPosts = async (req, res) => {
     if (!profileUser || !viewer) {
       return res.status(404).json({ message: "User not found" });
     }
-
-
-
-    const posts = await Post.find({ authorId: profileUserId })
+    const posts = await Post.find({
+      authorId: profileUserId, $or: [
+        { suspended: { $exists: false } },
+        { suspended: false }
+      ]
+    })
       .populate('authorId', 'username profileImageURL')
       .populate('tags', 'username profileImageURL')
       .sort({ createdAt: -1 });
@@ -161,8 +185,6 @@ const getOwnPosts = async (req, res) => {
       if (visibility === "private" && isSelf) return true;
       return false;
     });
-
-
     res.status(200).json({
       posts: filtered,
       user: {
@@ -426,7 +448,12 @@ const getFeedPosts = async (req, res) => {
 
     const userFollowing = user.following.map(id => id.toString());
 
-    const allPosts = await Post.find()
+    const allPosts = await Post.find({
+      $or: [
+        { suspended: { $exists: false } },
+        { suspended: false }
+      ]
+    })
       .populate("authorId", "username profileImageURL isVerified")
       .populate("tags", "username")
       .sort({ createdAt: -1 });

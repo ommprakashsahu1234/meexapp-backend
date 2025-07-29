@@ -739,22 +739,10 @@ const submitComplaint = async (req, res) => {
       complaintId: newComplaint._id,
     });
   } catch (err) {
+    console.error("Complaint Submission Error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
-
-const ResolveUsername = async (req, res) => {
-  const username = req.params.username;
-  try {
-    const user = await require("../models/User").findOne({ username });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.json({ _id: user._id });
-  } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-}
 
 
 
@@ -784,6 +772,5 @@ module.exports = {
   updateProfile,
   getSuggestedUsers,
   submitComplaint,
-  ResolveUsername,
 };
 

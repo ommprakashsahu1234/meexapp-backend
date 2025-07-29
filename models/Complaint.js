@@ -19,6 +19,11 @@ const ComplaintSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    status: {
+      type: String,
+      enum: ["active", "pending", "completed"],
+      default: "active"
+    }
   },
   { timestamps: true }
 );
