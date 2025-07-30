@@ -217,7 +217,6 @@ const likePost = async (req, res) => {
 
     await Like.create({ postId, userId });
     await recordPostView(userId, postId);
-    await Post.findByIdAndUpdate(postId, { $addToSet: { likes: userId } });
 
     res.status(200).json({ message: "Post liked" });
 
@@ -249,7 +248,6 @@ const unlikePost = async (req, res) => {
     const userId = req.user.id;
 
     await Like.findOneAndDelete({ postId, userId });
-    await Post.findByIdAndUpdate(postId, { $pull: { likes: userId } });
 
     await Activity.create({
       userId: userId,

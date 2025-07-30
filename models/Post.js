@@ -15,7 +15,6 @@ const post = new mongoose.Schema({
   ],
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   location: { type: String },
-  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   visibility: { type: String, enum: ["public", "private", "followers"], default: "public" },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
